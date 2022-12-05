@@ -63,11 +63,10 @@ int main() {
     vector<vector<char>> part1_columns = columns;
     for (auto move: moves) {
         for (int i=0; i<move[0]; ++i) {
-            int src_col = move[1];
-            int dest_col = move[2];
-            char box = part1_columns[src_col].back();
-            part1_columns[src_col].pop_back();
-            part1_columns[dest_col].push_back(box);
+            auto *src_col = &part1_columns[move[1]];
+            auto *dest_col = &part1_columns[move[2]];
+            dest_col->push_back(src_col->back());
+            src_col->pop_back();
         }
     }
 
@@ -82,14 +81,11 @@ int main() {
     vector<vector<char>> part2_columns = columns;
     for (auto move: moves) {
         for (int i=move[0]; i>0; --i) {
-            int src_col = move[1];
-            int dest_col = move[2];
-
-            int pos = part2_columns[src_col].size() - i;
-            char box = part2_columns[src_col][pos];
-            part2_columns[src_col].erase(part2_columns[src_col].end() - i);
-
-            part2_columns[dest_col].push_back(box);
+            auto *src_col = &part2_columns[move[1]];
+            auto *dest_col = &part2_columns[move[2]];
+            int pos = src_col->size() - i;
+            dest_col->push_back((*src_col)[pos]);
+            src_col->erase(src_col->end() - i);
         }
     }
 
