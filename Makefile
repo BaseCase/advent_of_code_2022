@@ -20,3 +20,6 @@ day03: day
 
 day04: DAY = day04
 day04: day
+
+day05: DAY = day05
+day05: day
