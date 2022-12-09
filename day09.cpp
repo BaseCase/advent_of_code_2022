@@ -42,65 +42,10 @@ void catch_up(coords* head_pos, coords* tail_pos) {
 }
 
 
-int main() {
-    vector<head_move> moves;
-    fstream input;
-    input.open("./inputs/day09.input");
-    string line;
-    while (getline(input, line)) {
-        head_move m;
-        m.direction = line[0];
-        m.distance = stoi(line.substr(2));
-        moves.push_back(m);
-    }
-
-    // part 1
-    coords head_pos = {0, 0};
-    coords tail_pos = {0, 0};
+int spaces_touched_by_tail_given_moves_and_rope_size(vector<head_move> moves, int rope_size) {
     set<coords> visited_by_tail;
-    visited_by_tail.insert(tail_pos);
-    for (auto m: moves) {
-        switch (m.direction) {
-        case 'U':
-            for (int i=m.distance; i>0; --i) {
-                --(head_pos.y);
-                catch_up(&head_pos, &tail_pos);
-                visited_by_tail.insert(tail_pos);
-            }
-            break;
-
-        case 'D':
-            for (int i=m.distance; i>0; --i) {
-                ++(head_pos.y);
-                catch_up(&head_pos, &tail_pos);
-                visited_by_tail.insert(tail_pos);
-            }
-            break;
-
-        case 'L':
-            for (int i=m.distance; i>0; --i) {
-                --(head_pos.x);
-                catch_up(&head_pos, &tail_pos);
-                visited_by_tail.insert(tail_pos);
-            }
-            break;
-
-        case 'R':
-            for (int i=m.distance; i>0; --i) {
-                ++(head_pos.x);
-                catch_up(&head_pos, &tail_pos);
-                visited_by_tail.insert(tail_pos);
-            }
-            break;
-        }
-    }
-
-    cout << "(Part 1) Number of coords visited by tail: " << visited_by_tail.size() << ".\n";
-
-    // part 2
-    visited_by_tail.clear();
     vector<coords> rope;
-    for (int i=0; i<10; ++i)
+    for (int i=0; i<rope_size; ++i)
         rope.push_back({0, 0});
 
     for (auto m: moves) {
@@ -155,5 +100,26 @@ int main() {
         }
     }
 
-    cout << "(Part 2) Number of coords visited by longer rope's tail: " << visited_by_tail.size() << ".\n";
+    return visited_by_tail.size();
+}
+
+
+int main() {
+    vector<head_move> moves;
+    fstream input;
+    input.open("./inputs/day09.input");
+    string line;
+    while (getline(input, line)) {
+        head_move m;
+        m.direction = line[0];
+        m.distance = stoi(line.substr(2));
+        moves.push_back(m);
+    }
+
+    // part 1
+    int part1 = spaces_touched_by_tail_given_moves_and_rope_size(moves, 2);
+    int part2 = spaces_touched_by_tail_given_moves_and_rope_size(moves, 10);
+
+    cout << "(Part 1) Number of coords visited by tail: " << part1 << ".\n";
+    cout << "(Part 2) Number of coords visited by longer rope's tail: " << part2 << ".\n";
 }
