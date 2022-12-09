@@ -49,54 +49,31 @@ int spaces_touched_by_tail_given_moves_and_rope_size(vector<head_move> moves, in
         rope.push_back({0, 0});
 
     for (auto m: moves) {
-        switch (m.direction) {
-        case 'U':
-            for (int i=m.distance; i>0; --i) {
+        for (int i=m.distance; i>0; --i) {
+            switch (m.direction) {
+            case 'U':
                 --(rope[0].y);
-                for (int r=0; r<rope.size(); ++r) {
-                    coords* head = &(rope[r]);
-                    coords* tail = &(rope[r+1]);
-                    catch_up(head, tail);
-                }
-                visited_by_tail.insert(rope.back());
-            }
-            break;
+                break;
 
-        case 'D':
-            for (int i=m.distance; i>0; --i) {
+            case 'D':
                 ++(rope[0].y);
-                for (int r=0; r<rope.size(); ++r) {
-                    coords* head = &rope[r];
-                    coords* tail = &rope[r+1];
-                    catch_up(head, tail);
-                }
-                visited_by_tail.insert(rope.back());
-            }
-            break;
+                break;
 
-        case 'L':
-            for (int i=m.distance; i>0; --i) {
+            case 'L':
                 --(rope[0].x);
-                for (int r=0; r<rope.size(); ++r) {
-                    coords* head = &rope[r];
-                    coords* tail = &rope[r+1];
-                    catch_up(head, tail);
-                }
-                visited_by_tail.insert(rope.back());
-            }
-            break;
+                break;
 
-        case 'R':
-            for (int i=m.distance; i>0; --i) {
+            case 'R':
                 ++(rope[0].x);
-                for (int r=0; r<rope.size(); ++r) {
-                    coords* head = &rope[r];
-                    coords* tail = &rope[r+1];
-                    catch_up(head, tail);
-                }
-                visited_by_tail.insert(rope.back());
+                break;
             }
-            break;
+
+            for (int r=0; r<rope.size(); ++r) {
+                coords* head = &(rope[r]);
+                coords* tail = &(rope[r+1]);
+                catch_up(head, tail);
+            }
+            visited_by_tail.insert(rope.back());
         }
     }
 
