@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <set>
 
 
 using namespace std;
@@ -23,58 +24,57 @@ int main() {
     int stride = 99;
     int rows = trees.size() / stride;
     // all trees out the outer edges are visible
-    int visible_count = (stride * 2) + (rows * 2) - 4;
+    int visible_count = 0;
+    set<int> seen_idxs;
 
     //
     // part 1
     //
-    for (int row=1; row < rows-1; ++row) {
-        for (int col=1; col < stride - 1; ++col) {
+    // looking in from the top side
+    for (int col=0; col<stride; ++col) {
+        int highest_seen = -1;
+        for (int row=0; row<rows; ++row) {
             int idx = (stride * row) + col;
-            int value = trees[idx];
-            bool visible;
-
-            // above
-            visible = true;
-            for (int i = idx-stride; i>0; i-=stride) {
-                if (trees[i] >= value) visible = false;
-            }
-            if (visible) {
-                ++visible_count;
-                continue;
-            }
-
-            // below
-            visible = true;
-            for (int i = idx+stride; i<trees.size(); i+=stride) {
-                if (trees[i] >= value) visible = false;
-            }
-            if (visible) {
-                ++visible_count;
-                continue;
-            }
-
-            // left
-            visible = true;
-            for (int i = idx-1; i>=(stride*row); --i) {
-                if (trees[i] >= value) visible = false;
-            }
-            if (visible) {
-                ++visible_count;
-                continue;
-            }
-
-            // right
-            visible = true;
-            for (int i = idx+1; i<stride*(row+1); ++i) {
-                if (trees[i] >= value) visible = false;
-            }
-            if (visible) {
-                ++visible_count;
-                continue;
+            if (trees[idx] > highest_seen) {
+                seen_idxs.insert(idx);
+                highest_seen = trees[idx];
             }
         }
     }
+    // looking in from the bottom side
+    for (int col=0; col<stride; ++col) {
+        int highest_seen = -1;
+        for (int row=rows-1; row>=0; --row) {
+            int idx = (stride * row) + col;
+            if (trees[idx] > highest_seen) {
+                seen_idxs.insert(idx);
+                highest_seen = trees[idx];
+            }
+        }
+    }
+    // looking in from the left side
+    for (int row=0; row<rows; ++row) {
+        int highest_seen = -1;
+        for (int col=0; col<stride; ++col) {
+            int idx = (stride * row) + col;
+            if (trees[idx] > highest_seen) {
+                seen_idxs.insert(idx);
+                highest_seen = trees[idx];
+            }
+        }
+    }
+    // looking in from the right side
+    for (int row=0; row<rows; ++row) {
+        int highest_seen = -1;
+        for (int col=stride-1; col>=0; --col) {
+            int idx = (stride * row) + col;
+            if (trees[idx] > highest_seen) {
+                seen_idxs.insert(idx);
+                highest_seen = trees[idx];
+            }
+        }
+    }
+    visible_count = seen_idxs.size();
 
     //
     // part 2
