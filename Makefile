@@ -35,3 +35,6 @@ day08: day
 
 day09: DAY = day09
 day09: day
+
+day10: DAY = day10
+day10: day
